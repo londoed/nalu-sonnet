@@ -15,8 +15,8 @@ class NAC(snt.AbstractModule):
         num_outputs: Integer describing the number of outputs.
 
     """
-    def __init__(self, input_shape, num_outputs, name=None):
-        super(NAC, self).__init__(name)
+    def __init__(self, input_shape, num_outputs, name='nac'):
+        super(NAC, self).__init__(name=name)
         self.num_outputs = num_outputs
 
         shape = [int(input_shape[-1]), self.num_outputs]
@@ -37,8 +37,8 @@ class NALU(snt.AbstractModule):
         num_outputs: Integer describing the number of outputs.
 
     """
-    def __init__(self, input_shape, num_outputs, name=None):
-        super(NALU, self).__init__(name)
+    def __init__(self, input_shape, num_outputs, name='nalu'):
+        super(NALU, self).__init__(name=name)
         self.num_outputs = num_outputs
         self.nac = NAC(input_shape, self.num_outputs)
         self.eps = 1e-7
@@ -47,7 +47,7 @@ class NALU(snt.AbstractModule):
         self.G = tf.Variable("G", shape=shape, initializer=tf.initializers.GlorotUniform())
 
     def _build(self, x):
-        g = tf.nn.sigmoid(tf.nn.matmul(x, self.G))
+        g = tf.nn.sigmoid(tf.matmul(x, self.G))
         y1 = g * self.nac(x)
-        y2 = (1 - g) * tf.exp(self.nac(tf.math.log(tf.abs(x) + self.eps)))
+        y2 = (1 - g) * tf.exp(self.nac(tf.log(tf.abs(x) + self.eps)))
         return y1 + y2
