@@ -52,6 +52,7 @@ class NALU(snt.AbstractModule):
         self.G = tf.Variable("G", shape=shape, initializer=tf.initializers.GlorotUniform())
 
     def __call__(self, x):
+        self._initialize(x)
         g = tf.nn.sigmoid(tf.matmul(x, self.G))
         y1 = g * self.nac(x)
         y2 = (1 - g) * tf.exp(self.nac(tf.log(tf.abs(x) + self.eps)))
