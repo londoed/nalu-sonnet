@@ -30,7 +30,7 @@ class NAC(snt.Module):
         W = tf.nn.tanh(self.W_hat) * tf.nn.sigmoid(self.M_hat)
         return tf.matmul(x, tf.cast(W, 'float64'))
 
-class NALU(snt.AbstractModule):
+class NALU(snt.Module):
     """Neural arithmetic logic unit.
 
     The implementation is based on https://arxiv.org/abs/1808.00508.
